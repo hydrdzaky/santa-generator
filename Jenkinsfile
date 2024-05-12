@@ -76,17 +76,16 @@ pipeline {
         //     }
         // }
 
-        // stage('Authenticate') {
-        //     steps {
-        //         sh '''
-        //         gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
-        //         '''
-        //     }
-        // }
+        stage('Authenticate') {
+            steps {
+                sh '''
+                gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS"
+                '''
+            }
+        }
         stage('docker build stage and docker push stage'){
             steps {
                 echo 'Authentication stage for push to GCR'
-                sh "gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file==${GCLOUD_CREDS}"
                 sh 'gcloud auth configure-docker'
                 sh 'docker build . -t gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
                 sh 'docker push gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
