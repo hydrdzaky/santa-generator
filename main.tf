@@ -1,23 +1,16 @@
-provider "google" {
-    project = "proyekdicoding-416705"
-    region = "us-central1"
-}
-resource "google_cloud_run_service" "default" {
-  name     = "cloudrun-srv-cicd"
+resource "google_cloud_run_v2_service" "default" {
+  name     = "cloudrun-service"
   location = "us-central1"
+  ingress = "INGRESS_TRAFFIC_ALL"
+ 
   template {
-    spec {
-      containers {
+    containers {
         image = "gcr.io/proyekdicoding-416705/secretsanta:${var.tags}"
-        ports {
-          container_port = 8080
-        }
+        env {
+        name = "PORT"
+        value = "8080"
       }
     }
-  }
-  traffic {
-    percent         = 100
-    latest_revision = true
   }
 }
 variable "tags" {
