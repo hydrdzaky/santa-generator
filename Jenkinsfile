@@ -8,6 +8,7 @@ pipeline {
         SCANNER_HOME= tool 'sonar-scanner'
         IMAGE_VERSION = "${env.BUILD_NUMBER}"
         IMAGE_NAME = "santasecret.${IMAGE_VERSION}"
+        GCLOUD_CREDS=credentials('gcloud-creds')
     }
 
     stages {
@@ -78,6 +79,7 @@ pipeline {
         stage('docker build stage and docker push stage'){
             steps {
                 echo 'Authentication stage for push to GCR'
+                sh "gcloud auth activate-service-account karan-service-account@ce-ps-3team.iam.gserviceaccount.com --key-file==${GCLOUD_CREDS}"
                 sh 'gcloud auth configure-docker'
                 sh 'docker build . -t gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
                 sh 'docker push gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
