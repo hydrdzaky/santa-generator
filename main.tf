@@ -10,7 +10,7 @@ resource "google_cloud_run_service" "default" {
       containers {
         image = "gcr.io/proyekdicoding-416705/secretsanta:${var.tags}"
         ports {
-          container_port = 80
+          container_port = 8080
         }
       }
     }
@@ -21,5 +21,5 @@ resource "google_cloud_run_service" "default" {
   }
 }
 variable "tags" {
-  type= string   
+  type=string   
 }  

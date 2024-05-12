@@ -83,6 +83,7 @@ pipeline {
                 sh '''
                 gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS"
                 '''
+                sh 'gcloud config set project proyekdicoding-416705'
             }
         }
         stage('docker build stage and docker push stage'){
