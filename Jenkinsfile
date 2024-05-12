@@ -107,14 +107,14 @@ pipeline {
                     --allow-unauthenticated \
                     --port=8080 \
                     --service-account=4820298729-compute@developer.gserviceaccount.com \
-                    --max-instances=10 \
+                    --max-instances=5 \
                     --region=us-central1 \
                     --project=proyekdicoding-416705
                 '''
-                // echo 'updating the service of cloud run with latest image using terraform'
-                // sh 'terraform init'
-                // sh 'terraform plan -var tags="v$BUILD_NUMBER"'
-                // sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER"'
+                echo 'updating the service of cloud run with latest image using terraform'
+                sh 'terraform init'
+                sh 'terraform plan -var tags="v$BUILD_NUMBER"'
+                sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER"'
             }
         }
     }
