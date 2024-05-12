@@ -14,9 +14,15 @@ resource "google_cloud_run_v2_service" "default" {
   template {
     containers {
         image = "gcr.io/proyekdicoding-416705/secretsanta:${var.tags}"
-    ports {
-        container_port = 8080
-      }
+        env {
+            name = "PORT"
+            value = "8081"
+        }
+        startup_probe {
+            http_get {
+            port = 8081
+            }
+        }
     }
   }
 }
