@@ -8,7 +8,9 @@ terraform {
 }
 
 provider "google" {
+    credentials = file("credentials.json")
     project = "proyekdicoding-416705"
+    region = "us-central1"
 }
 
 resource "google_cloud_run_v2_service" "default" {
@@ -40,6 +42,7 @@ resource "google_cloud_run_v2_service" "default" {
 
    policy_data = data.google_iam_policy.noauth.policy_data
  }
+
 variable "tags" {
   type=string   
 }  
