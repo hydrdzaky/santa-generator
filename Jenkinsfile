@@ -79,8 +79,8 @@ pipeline {
             steps {
                 echo 'Authentication stage for push to GCR'
                 sh 'gcloud auth configure-docker'
-                sh 'sudo docker build . -t gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
-                sh 'sudo docker push gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
+                sh 'docker build . -t gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
+                sh 'docker push gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
             }
         }
         stage('QA Team certification') {
