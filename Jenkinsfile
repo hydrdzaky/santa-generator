@@ -8,9 +8,6 @@ pipeline {
         SCANNER_HOME= tool 'sonar-scanner'
         IMAGE_VERSION = "${env.BUILD_NUMBER}"
         IMAGE_NAME = "santasecret.${IMAGE_VERSION}"
-        CLOUDSDK_CORE_PROJECT='proyekdicoding-416705'
-        CLIENT_EMAIL='4820298729-compute@developer.gserviceaccount.com'
-        CLOUD_CREDS=credentials('gcloud-creds')
     }
 
     stages {
@@ -78,39 +75,33 @@ pipeline {
             }
         }
 
-    stage('Verify version') {
-      steps {
-        sh '''
-          gcloud version
-        '''
-      }
+        stage('docker build stage and docker push stage'){
+            steps {
+                echo 'Authentication stage for push to GCR'
+                sh 'gcloud auth configure-docker'
+                sh 'sudo docker build . -t gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
+                sh 'sudo docker push gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
+            }
+        }
+        stage('QA Team certification') {
+            steps{
+                input "Deploy to prod?"    
+            }
+        }
+        stage("updating the service of cloud run"){
+            steps{
+                echo 'updating the service of cloud run with latest image using terraform'
+                sh 'terraform init'
+                sh 'terraform plan -var tags="v$BUILD_NUMBER"'
+                sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER"'
+            }
+        }
     }
-    stage('Authenticate') {
-      steps {
-        sh '''
-          gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
-        '''
-      }
-    }
-    stage('Install service') {
-      steps {
-        sh '''
-          gcloud run services replace service.yaml --platform='managed' --region='us-central1'
-        '''
-      }
-    }
-    stage('Allow allUsers') {
-      steps {
-        sh '''
-          gcloud run services add-iam-policy-binding secretsanta --region='us-central1' --member='allUsers' --role='roles/run.invoker'
-        '''
-      }
-    }
-  }
 
         post {
             always {
                 emailext (
+                    to: 'dr.stranger157@gmail.com',
                     subject: "Pipeline Status: ${BUILD_NUMBER}",
                     body: '''<html>
                                 <body>
@@ -119,12 +110,8 @@ pipeline {
                                     <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
                                 </body>
                             </html>''',
-                    to: 'dr.stranger157@gmail.com',
-                    from: 'haydar.dzaky@gmail.com',
-                    replyTo: 'dr.stanger@gmail.com',
                     mimeType: 'text/html'
                 )
-                sh 'gcloud auth revoke $CLIENT_EMAIL'
             }
         }
 }
