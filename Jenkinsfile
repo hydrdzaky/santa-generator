@@ -7,9 +7,10 @@ pipeline {
     environment{
         SCANNER_HOME= tool 'sonar-scanner'
         IMAGE_VERSION = "${env.BUILD_NUMBER}"
-        LAST_CLOUD_RUN_REVISION = "back-end-${currentBuild.previousBuild.getNumber()}"
-        IMAGE_NAME = "gcr.io/proyekdicoding-416705>/santasecret.${IMAGE_VERSION}"
-        PREVIOUS_IMAGE_NAME = "gcr.io/proyekdicoding-416705>/santasecret.${currentBuild.previousBuild.getNumber()}"
+        IMAGE_NAME = "santasecret.${IMAGE_VERSION}"
+        CLOUDSDK_CORE_PROJECT='proyekdicoding-416705'
+        CLIENT_EMAIL='4820298729-compute@developer.gserviceaccount.com'
+        CLOUD_CREDS=credentials('gcloud-creds')
     }
 
     stages {
@@ -60,7 +61,7 @@ pipeline {
             steps {
                script{
                    withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
-                    sh "docker build -t  santa123 . "
+                    sh "docker build -t  ${IMAGE_NAME} . "
                  }
                }
             }
@@ -70,62 +71,42 @@ pipeline {
             steps {
                script{
                    withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
-                    sh "docker tag santa123 haydardzaky123/santa123:latest"
-                    sh "docker push haydardzaky123/santa123:latest"
+                    sh "docker tag santa123 haydardzaky123/${IMAGE_NAME}"
+                    sh "docker push haydardzaky123/${IMAGE_NAME}"
                  }
                }
             }
         }
-        
 
-		stage ("Remove last docker image"){
-            steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "docker rmi -f ${PREVIOUS_IMAGE_NAME}"
-                }
-            }
-        }
-
-        stage("Build new docker image"){
-            steps{
-                sh "docker build --tag=${IMAGE_NAME} . --file=docker/Dockerfile"
-            }
-        }
-
-        stage("Push to Google Container Registry"){
-            steps{
-                sh "docker push ${IMAGE_NAME}"
-            }
-        }
-
-        stage("Delete last image from Container Registry"){
-            steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "gcloud container images delete ${PREVIOUS_IMAGE_NAME}"
-                }
-            }
-        }
-
-        stage("Deploy new image to Cloud Run"){
-            steps{
-                sh "gcloud run deploy back-end --image  ${IMAGE_NAME} --platform=managed --region=us-central1 --port=8080 --revision-suffix=${IMAGE_VERSION}"
-            }
-        }
-
-        stage("Delete last Cloud Run revision"){
-            steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "yes | gcloud run revisions delete ${LAST_CLOUD_RUN_REVISION} --platform=managed --region=us-central1"
-                }
-            }
-        }
-
-        stage('Docker Image Scan') {
-            steps {
-               sh "trivy image ${IMAGE_NAME} "
-            }
-        }
+    stage('Verify version') {
+      steps {
+        sh '''
+          gcloud version
+        '''
+      }
     }
+    stage('Authenticate') {
+      steps {
+        sh '''
+          gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
+        '''
+      }
+    }
+    stage('Install service') {
+      steps {
+        sh '''
+          gcloud run services replace service.yaml --platform='managed' --region='us-central1'
+        '''
+      }
+    }
+    stage('Allow allUsers') {
+      steps {
+        sh '''
+          gcloud run services add-iam-policy-binding secretsanta --region='us-central1' --member='allUsers' --role='roles/run.invoker'
+        '''
+      }
+    }
+  }
 
         post {
             always {
@@ -138,11 +119,12 @@ pipeline {
                                     <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
                                 </body>
                             </html>''',
-                    to: 'haydar.dzaky@gmail.com',
-                    from: 'jenkins@example.com',
-                    replyTo: 'jenkins@example.com',
+                    to: 'dr.stranger157@gmail.com',
+                    from: 'haydar.dzaky@gmail.com',
+                    replyTo: 'dr.stanger@gmail.com',
                     mimeType: 'text/html'
                 )
+                sh 'gcloud auth revoke $CLIENT_EMAIL'
             }
         }
 }

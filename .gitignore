@@ -1,5 +1,6 @@
 Jenkinsfile1
 Jenkinsfile2
+Jenkinsfile3
 HELP.md
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
