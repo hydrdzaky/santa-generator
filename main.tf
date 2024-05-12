@@ -1,6 +1,10 @@
 provider "google" {
-    project = "Project Name"
+    project = "proyekdicoding-416705"
     region = "us-central1"
+}
+resource "google_container_registry" "registry" {
+  project  = "proyekdicoding-416705"
+  location = "US"
 }
 resource "google_cloud_run_v2_service" "default" {
   name     = "cloudrun-service"
