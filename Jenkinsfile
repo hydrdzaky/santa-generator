@@ -102,15 +102,14 @@ pipeline {
         stage("updating the service of cloud run"){
             steps{
                   sh '''
-               
-gcloud run deploy secretsanta \
---image=gcr.io/proyekdicoding-416705/secretsanta@sha256:$BUILD_NUMBER \
---allow-unauthenticated \
---port=8080 \
---service-account=4820298729-compute@developer.gserviceaccount.com \
---max-instances=10 \
---region=us-central1 \
---project=proyekdicoding-416705
+                    gcloud run deploy secretsanta \
+                    --image=gcr.io/proyekdicoding-416705/secretsanta@sha256:$BUILD_NUMBER \
+                    --allow-unauthenticated \
+                    --port=8080 \
+                    --service-account=4820298729-compute@developer.gserviceaccount.com \
+                    --max-instances=10 \
+                    --region=us-central1 \
+                    --project=proyekdicoding-416705
                 '''
                 // echo 'updating the service of cloud run with latest image using terraform'
                 // sh 'terraform init'
