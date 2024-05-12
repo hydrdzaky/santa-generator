@@ -55,31 +55,38 @@ pipeline {
             }
         }
 
-         stage('Docker Build') {
-            steps {
-               script{
-                   withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
-                    sh "docker build -t  ${IMAGE_NAME} . "
-                 }
-               }
-            }
-        }
+        //  stage('Docker Build') {
+        //     steps {
+        //        script{
+        //            withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
+        //             sh "docker build -t  ${IMAGE_NAME} . "
+        //          }
+        //        }
+        //     }
+        // }
 
-        stage('Docker Push') {
-            steps {
-               script{
-                   withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
-                    sh "docker tag santa123 haydardzaky123/${IMAGE_NAME}"
-                    sh "docker push haydardzaky123/${IMAGE_NAME}"
-                 }
-               }
-            }
-        }
+        // stage('Docker Push') {
+        //     steps {
+        //        script{
+        //            withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
+        //             sh "docker tag santa123 haydardzaky123/${IMAGE_NAME}"
+        //             sh "docker push haydardzaky123/${IMAGE_NAME}"
+        //          }
+        //        }
+        //     }
+        // }
 
+        // stage('Authenticate') {
+        //     steps {
+        //         sh '''
+        //         gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
+        //         '''
+        //     }
+        // }
         stage('docker build stage and docker push stage'){
             steps {
                 echo 'Authentication stage for push to GCR'
-                sh "gcloud auth activate-service-account karan-service-account@ce-ps-3team.iam.gserviceaccount.com --key-file==${GCLOUD_CREDS}"
+                sh "gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file==${GCLOUD_CREDS}"
                 sh 'gcloud auth configure-docker'
                 sh 'docker build . -t gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
                 sh 'docker push gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
