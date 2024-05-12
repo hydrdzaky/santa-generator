@@ -13,11 +13,11 @@ pipeline {
     }
 
     stages {
-        stage('git-checkout') {
-            steps {
-                git 'https://github.com/hydrdzaky/santa-generator.git'
-            }
-        }
+        // stage('git-checkout') {
+        //     steps {
+        //         git 'https://github.com/hydrdzaky/santa-generator.git'
+        //     }
+        // }
 
         stage('Code-Compile') {
             steps {
