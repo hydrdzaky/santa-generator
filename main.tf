@@ -1,3 +1,7 @@
+provider "google" {
+    project = "Project Name"
+    region = "us-central1"
+}
 resource "google_cloud_run_v2_service" "default" {
   name     = "cloudrun-service"
   location = "us-central1"
@@ -6,9 +10,8 @@ resource "google_cloud_run_v2_service" "default" {
   template {
     containers {
         image = "gcr.io/proyekdicoding-416705/secretsanta:${var.tags}"
-        env {
-        name = "PORT"
-        value = "8080"
+    ports {
+        container_port = 8080
       }
     }
   }
