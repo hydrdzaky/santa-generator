@@ -3,6 +3,8 @@ pipeline {
     tools{
         jdk 'jdk17'
         maven 'maven3'
+        terraform 'terraform'
+
     }
     environment{
         SCANNER_HOME= tool 'sonar-scanner'
