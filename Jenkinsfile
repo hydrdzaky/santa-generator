@@ -39,15 +39,15 @@ pipeline {
         }
 
 
-        stage('Sonar Analysis') {
-            steps {
-               withSonarQubeEnv('sonar'){
-                   sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Santa \
-                   -Dsonar.java.binaries=. \
-                   -Dsonar.projectKey=Santa '''
-               }
-            }
-        }
+        // stage('Sonar Analysis') {
+        //     steps {
+        //        withSonarQubeEnv('sonar'){
+        //            sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Santa \
+        //            -Dsonar.java.binaries=. \
+        //            -Dsonar.projectKey=Santa '''
+        //        }
+        //     }
+        // }
 
 		 
         stage('Code-Build') {
@@ -70,17 +70,10 @@ pipeline {
             steps {
                script{
                    withDockerRegistry(credentialsId: 'docker-cred') {
-                    sh "docker tag santa123 adijaiswal/santa123:latest"
-                    sh "docker push adijaiswal/santa123:latest"
+                    sh "docker tag santa123 haydardzaky123/santa123:latest"
+                    sh "docker push haydardzaky123/santa123:latest"
                  }
                }
-            }
-        }
-        
-        	 
-        stage('Docker Image Scan') {
-            steps {
-               sh "trivy image ${IMAGE_NAME} "
             }
         }
         
@@ -92,16 +85,19 @@ pipeline {
                 }
             }
         }
+
         stage("Build new docker image"){
             steps{
                 sh "docker build --tag=${IMAGE_NAME} . --file=docker/Dockerfile"
             }
         }
+
         stage("Push to Google Container Registry"){
             steps{
                 sh "docker push ${IMAGE_NAME}"
             }
         }
+
         stage("Delete last image from Container Registry"){
             steps{
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -109,16 +105,24 @@ pipeline {
                 }
             }
         }
+
         stage("Deploy new image to Cloud Run"){
             steps{
                 sh "gcloud run deploy back-end --image  ${IMAGE_NAME} --platform=managed --region=us-central1 --port=8080 --revision-suffix=${IMAGE_VERSION}"
             }
         }
+
         stage("Delete last Cloud Run revision"){
             steps{
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh "yes | gcloud run revisions delete ${LAST_CLOUD_RUN_REVISION} --platform=managed --region=us-central1"
                 }
+            }
+        }
+
+        stage('Docker Image Scan') {
+            steps {
+               sh "trivy image ${IMAGE_NAME} "
             }
         }
     }
