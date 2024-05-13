@@ -104,7 +104,7 @@ pipeline {
                 sh '''export GOOGLE_OAUTH_ACCESS_TOKEN=$(gcloud auth print-access-token --impersonate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com)'''
                 echo 'updating the service of cloud run with latest image using terraform'
                 sh 'terraform init'
-                sh 'terraform plan -var tags="v$BUILD_NUMBER" creds="$GOOGLE_OAUTH_ACCESS_TOKEN"'
+                sh 'terraform plan -var tags="v$BUILD_NUMBER"'
                 sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER"'
             }
         }
