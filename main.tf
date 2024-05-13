@@ -9,7 +9,7 @@ terraform {
 provider "google" {
     project = "proyekdicoding-416705"
     region = "us-central1"
-    credentials = file("creds.txt")
+    credentials = file("cred.txt")
 }
 resource "google_cloud_run_v2_service" "default" {
   name     = "cloudrun-service"
