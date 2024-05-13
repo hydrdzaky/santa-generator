@@ -101,7 +101,7 @@ pipeline {
         }
         stage("updating the service of cloud run"){
             steps{
-                sh "export GOOGLE_OAUTH_ACCESS_TOKEN=$(gcloud auth print-access-token --impersonate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com)"
+                sh '''export GOOGLE_OAUTH_ACCESS_TOKEN=$(gcloud auth print-access-token --impersonate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com)'''
                 echo 'updating the service of cloud run with latest image using terraform'
                 sh 'terraform init'
                 sh 'terraform plan -var tags="v$BUILD_NUMBER"'
