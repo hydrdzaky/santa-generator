@@ -9,7 +9,7 @@ terraform {
 provider "google" {
     project = "proyekdicoding-416705"
     region = "us-central1"
-    credentials = data.external.google_access_token.result
+    credentials = file("creds.txt")
 }
 resource "google_cloud_run_v2_service" "default" {
   name     = "cloudrun-service"
@@ -28,12 +28,3 @@ resource "google_cloud_run_v2_service" "default" {
 variable "tags" {
   type=string   
 }  
-
-variable "google_credentials" {
-  description = "Google Cloud Platform service account credentials"
-  type        = string
-  default     = "${var.creds}"
-}
-data "external" "google_access_token" {
-  program = ["bash", "-c", "gcloud auth print-access-token --impersonate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com"]
-}
