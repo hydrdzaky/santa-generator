@@ -81,7 +81,7 @@ pipeline {
         stage('Authenticate') {
             steps {
                 sh '''
-                gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS"
+                gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS --project=proyekdicoding-416705
                 '''
                 sh 'gcloud config set project proyekdicoding-416705'
             }
@@ -101,13 +101,11 @@ pipeline {
         }
         stage("updating the service of cloud run"){
             steps{
-                sh '''export GOOGLE_AUTH_ACCESS_TOKEN=$(gcloud auth print-access-token --impersonate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com)>cred.txt'''
-                sh 'gcloud auth configure-terraform'
-                sh 'echo $GOOGLE_AUTH_ACCESS_TOKEN > cred.txt'
+                sh '''GOOGLE_AUTH_ACCESS_TOKEN=$(gcloud auth print-access-token --impersonate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com)>cred.txt'''
                 echo 'updating the service of cloud run with latest image using terraform'
                 sh 'terraform init'
-                sh 'terraform plan -var tags="v$BUILD_NUMBER"'
-                sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER"'
+                sh 'terraform plan -var tags="v$BUILD_NUMBER cred="$GCLOUD_CREDS"'
+                sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER" cred="$GCLOUD_CREDS"'
             }
         }
     }
