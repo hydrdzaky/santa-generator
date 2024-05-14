@@ -11,7 +11,7 @@ pipeline {
         IMAGE_VERSION = "${env.BUILD_NUMBER}"
         IMAGE_NAME = "santasecret.${IMAGE_VERSION}"
         GCLOUD_CREDS=credentials('gcloud-creds')
-        GCLOUD_TOKEN=credentials('gcloud-token')
+        GCLOUD_TOKEN=credentials('gcloud-tokenn')
     }
 
     stages {
