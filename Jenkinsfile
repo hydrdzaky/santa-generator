@@ -102,8 +102,8 @@ pipeline {
         stage("updating the service of cloud run"){
             steps{
                 sh '''
-                gcloud run deploy secretsanta:$$BUILD_NUMBER \
-                --image=gcr.io/proyekdicoding-416705/secretsanta:v65 \
+                gcloud run deploy secretsanta:$BUILD_NUMBER \
+                --image=gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER \
                 --allow-unauthenticated \
                 --port=8080 \
                 --service-account=jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com \
