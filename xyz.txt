@@ -1,1 +1,26 @@
+gcloud run deploy secretsanta \
+--image=gcr.io/proyekdicoding-416705/secretsanta:v64\
+--allow-unauthenticated \
+--port=8080 \
+--service-account=4820298729-compute@developer.gserviceaccount.com \
+--max-instances=10 \
+--region=us-central1 \
+--project=proyekdicoding-416705
 
+gcloud run deploy secretsanta \
+--image=gcr.io/proyekdicoding-416705/secretsanta:v62\
+--allow-unauthenticated \
+--port=8080 \
+--service-account=jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com \
+--max-instances=10 \
+--region=us-central1 \
+--project=proyekdicoding-416705
+
+gcloud run deploy secretsanta65 \
+--image=gcr.io/proyekdicoding-416705/secretsanta:v65 \
+--allow-unauthenticated \
+--port=8080 \
+--service-account=jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com \
+--max-instances=10 \
+--region=us-central1 \
+--project=proyekdicoding-416705

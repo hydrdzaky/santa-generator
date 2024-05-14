@@ -9,6 +9,7 @@ terraform {
 provider "google" {
     project = "proyekdicoding-416705"
     region = "us-central1"
+    credentials = var.credskey
 }
 resource "google_cloud_run_v2_service" "default" {
   name     = "cloudrun-service"
@@ -27,6 +28,6 @@ resource "google_cloud_run_v2_service" "default" {
 variable "tags" {
   type=string   
 } 
-variable "secretkey" {
+variable "credskey" {
   type=string   
 } 
