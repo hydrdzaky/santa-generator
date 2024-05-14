@@ -108,7 +108,7 @@ pipeline {
                         -out terraform.tfplan;echo \$? > status'
                         stash name: "terraform-plan", includes: "terraform.tfplan"
                         unstash "terraform-plan"
-                sh 'terraform apply terraform.tfplan --auto-approve -var tags="v$BUILD_NUMBER" '
+                sh 'terraform apply terraform.tfplan --auto-approve'
             }
         }
     }
