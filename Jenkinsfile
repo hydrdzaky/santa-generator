@@ -104,8 +104,11 @@ pipeline {
                 sh '''GOOGLE_AUTH_ACCESS_TOKEN=$(gcloud auth print-access-token --impersonate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com)>cred.txt'''
                 echo 'updating the service of cloud run with latest image using terraform'
                 sh 'terraform init'
-                sh 'terraform plan -var tags="v$BUILD_NUMBER" -var-file secretkey="$GCLOUD_CREDS"'
-                sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER"'
+                sh 'terraform plan -var tags="v$BUILD_NUMBER" -var secretkey="$GCLOUD_CREDS" \
+                        -out terraform.tfplan;echo \$? > status'
+                        stash name: "terraform-plan", includes: "terraform.tfplan"
+                        unstash "terraform-plan"
+                sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER" terraform.tfplan'
             }
         }
     }
