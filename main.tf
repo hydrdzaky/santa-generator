@@ -12,7 +12,7 @@ provider "google" {
     credentials = var.credskey
 }
 resource "google_cloud_run_v2_service" "default" {
-  name     = "cloudrun-service"
+  name     = "secretsanta${var.tags}"
   location = "us-central1"
   ingress = "INGRESS_TRAFFIC_ALL"
  

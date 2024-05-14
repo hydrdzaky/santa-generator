@@ -11,15 +11,14 @@ pipeline {
         IMAGE_VERSION = "${env.BUILD_NUMBER}"
         IMAGE_NAME = "santasecret.${IMAGE_VERSION}"
         GCLOUD_CREDS=credentials('gcloud-creds')
-        GCLOUD_TOKEN=credentials('gcloud-tokenn')
     }
 
     stages {
-        // stage('git-checkout') {
-        //     steps {
-        //         git 'https://github.com/hydrdzaky/santa-generator.git'
-        //     }
-        // }
+        /*stage('git-checkout') {
+            steps {
+                git 'https://github.com/hydrdzaky/santa-generator.git'
+            }
+        }*/
 
         stage('Code-Compile') {
             steps {
@@ -40,7 +39,6 @@ pipeline {
             }
         }
 
-
         // stage('Sonar Analysis') {
         //     steps {
         //        withSonarQubeEnv('sonar'){
@@ -57,27 +55,6 @@ pipeline {
                sh "mvn clean package"
             }
         }
-
-        //  stage('Docker Build') {
-        //     steps {
-        //        script{
-        //            withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
-        //             sh "docker build -t  ${IMAGE_NAME} . "
-        //          }
-        //        }
-        //     }
-        // }
-
-        // stage('Docker Push') {
-        //     steps {
-        //        script{
-        //            withDockerRegistry(credentialsId: 'daf7a33e-03ef-480b-be60-ba7513d8a509') {
-        //             sh "docker tag santa123 haydardzaky123/${IMAGE_NAME}"
-        //             sh "docker push haydardzaky123/${IMAGE_NAME}"
-        //          }
-        //        }
-        //     }
-        // }
 
         stage('Authenticate') {
             steps {
@@ -100,21 +77,8 @@ pipeline {
                 input "Deploy to prod?"    
             }
         }
-        // stage("deploy cloud run use CLI"){
-        //     steps{
-        //         sh '''
-        //         gcloud run deploy secretsanta$BUILD_NUMBER \
-        //         --image=gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER \
-        //         --allow-unauthenticated \
-        //         --port=8080 \
-        //         --service-account=jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com \
-        //         --max-instances=10 \
-        //         --region=us-central1 \
-        //         --project=proyekdicoding-416705
-        //         '''
-        //     }
-        // }
-        stage("updating the service of cloud run"){
+
+        stage("Build the service of cloud run using Terraform"){
             steps{
                 echo 'updating the service of cloud run with latest image using terraform'
                 sh 'terraform init'
@@ -122,7 +86,23 @@ pipeline {
                 sh 'terraform apply --auto-approve -var tags="v$BUILD_NUMBER" -var credskey="$GCLOUD_CREDS"'
             }
         }
+
+        /*stage("deploy cloud run use CLI"){
+            steps{
+                sh '''
+                gcloud run deploy secretsanta$BUILD_NUMBER \
+                --image=gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER \
+                --allow-unauthenticated \
+                --port=8080 \
+                --service-account=jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com \
+                --max-instances=10 \
+                --region=us-central1 \
+                --project=proyekdicoding-416705
+                '''
+            }
+        }*/
     }
+
 
         post {
             always {
