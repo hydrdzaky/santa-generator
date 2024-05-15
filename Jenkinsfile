@@ -31,13 +31,6 @@ pipeline {
                sh "mvn test"
             }
         }
-        
-		stage('OWASP Dependency Check') {
-            steps {
-               dependencyCheck additionalArguments: ' --scan ./ ', odcInstallation: 'DP-check'
-                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
 
         stage('Sonar Analysis') {
             steps {
@@ -48,6 +41,14 @@ pipeline {
                }
             }
         }
+        
+		stage('OWASP Dependency Check') {
+            steps {
+               dependencyCheck additionalArguments: ' --scan ./ ', odcInstallation: 'DP-check'
+                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+
 		 
         stage('Code-Build') {
             steps {
