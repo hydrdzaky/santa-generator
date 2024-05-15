@@ -34,11 +34,9 @@ pipeline {
 
         stage('Sonar Analysis') {
             steps {
-               withSonarQubeEnv('sonar'){
                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.url=http://34.101.252.224:9000/ -Dsonar.login=squ_9e1f1af4fda712a3ea24a1e824d14bc56172a937 -Dsonar.projectName=secret-santa \
                    -Dsonar.java.binaries=. \
                    -Dsonar.projectKey=secret-santa '''
-               }
             }
         }
         
