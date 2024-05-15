@@ -7,7 +7,7 @@ pipeline {
 
     }
     environment{
-        SCANNER_HOME= tool 'sonar-scanner'
+        SCANNER_HOME= tool'sonar-scanner'
         IMAGE_VERSION = "${env.BUILD_NUMBER}"
         IMAGE_NAME = "santasecret.${IMAGE_VERSION}"
         GCLOUD_CREDS=credentials('gcloud-creds')
@@ -34,9 +34,11 @@ pipeline {
 
         stage('Sonar Analysis') {
             steps {
+               withSonarQubeEnv('sonar'){
                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.url=http://34.101.252.224:9000/ -Dsonar.login=squ_9e1f1af4fda712a3ea24a1e824d14bc56172a937 -Dsonar.projectName=secret-santa \
                    -Dsonar.java.binaries=. \
                    -Dsonar.projectKey=secret-santa '''
+               }
             }
         }
         
