@@ -59,7 +59,7 @@ pipeline {
         stage('Authenticate') {
             steps {
                 sh '''
-                gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS --project=proyekdicoding-416705"
+                gcloud auth activate-service-account jenkins-gcloud@proyekdicoding-416705.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS" --project=proyekdicoding-416705
                 '''
                 sh 'gcloud config set project proyekdicoding-416705'
             }
