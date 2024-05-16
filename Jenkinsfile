@@ -106,18 +106,7 @@ pipeline {
 
         post {
             always {
-                emailext (
-                    to: 'dr.stranger157@gmail.com',
-                    subject: "Pipeline Status: ${BUILD_NUMBER}",
-                    body: '''<html>
-                                <body>
-                                    <p>Build Status: ${BUILD_STATUS}</p>
-                                    <p>Build Number: ${BUILD_NUMBER}</p>
-                                    <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
-                                </body>
-                            </html>''',
-                    mimeType: 'text/html'
-                )
+                discordSend description: '', enableArtifactsList: true, footer: '', image: '', link: '', result: '', scmWebUrl: 'https://github.com/jaiswaladi246/secretsanta-generator/blob/master/Jenkinsfile', showChangeset: true, thumbnail: '', title: '', webhookURL: 'https://discordapp.com/api/webhooks/1221715538728849450/LH2KZSJEc1PMqwi3iqPZpvA9FsQT5-nRUBDuReyuCxGdReUmHyR_Z2mfPbCWPUqqNm2y'
             }
         }
 }
