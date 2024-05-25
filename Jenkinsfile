@@ -88,7 +88,7 @@ pipeline {
             }
         }
 
-        /*stage("deploy cloud run use CLI"){
+        /*stage("Build the service of cloud run using Gcloud CLI"){
             steps{
                 sh '''
                 gcloud run deploy secretsanta$BUILD_NUMBER \
