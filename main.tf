@@ -6,6 +6,7 @@ terraform {
     }
   }
 }
+
 provider "google" {
     project = "constant-jigsaw-414207"
     region = "us-central1"
@@ -38,6 +39,7 @@ resource "google_cloud_run_service_iam_binding" "default" {
 variable "tags" {
   type=string   
 } 
+
 variable "credskey" {
   type=string   
 } 

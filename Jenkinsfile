@@ -26,7 +26,7 @@ pipeline {
             }
         }
         
-        stage('Unit Tests') {
+        stage('Code-Tests') {
             steps {
                sh "mvn test"
             }
@@ -43,7 +43,7 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
+        stage('Quality Gate Sonar') {
             steps {
                 script {
                   waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
@@ -65,7 +65,7 @@ pipeline {
             }
         }
 
-        stage('Authenticate') {
+        stage('Authenticate service account') {
             steps {
                 sh '''
                 gcloud auth activate-service-account privy-super-account@constant-jigsaw-414207.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS" --project=constant-jigsaw-414207
@@ -73,7 +73,8 @@ pipeline {
                 sh 'gcloud config set project constant-jigsaw-414207'
             }
         }
-        stage('docker build stage and docker push stage'){
+
+        stage('build and push'){
             steps {
                 echo 'Authentication stage for push to GCR'
                 sh 'gcloud auth list'
