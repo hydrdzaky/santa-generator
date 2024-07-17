@@ -11,6 +11,9 @@ provider "google" {
     region = "us-central1"
     credentials = var.credskey
 }
+resource "google_project_service" "cloud_run_api" {
+  service = "run.googleapis.com" // Service name
+}
 resource "google_cloud_run_v2_service" "default" {
   name     = "santa${var.tags}"
   location = "us-central1"
@@ -24,6 +27,9 @@ resource "google_cloud_run_v2_service" "default" {
       }
     }
   }
+ depends_on = [
+    google_project_service.cloud_run_api
+  ]
 }
 
 resource "google_cloud_run_service_iam_binding" "default" {
