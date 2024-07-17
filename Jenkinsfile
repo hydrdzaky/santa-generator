@@ -62,15 +62,15 @@ pipeline {
                 sh '''
                 gcloud auth activate-service-account privy-super-account@constant-jigsaw-414207.iam.gserviceaccount.com --key-file="$GCLOUD_CREDS" --project=constant-jigsaw-414207
                 '''
-                sh 'gcloud config set project proyekdicoding-416705'
+                sh 'gcloud config set project constant-jigsaw-414207'
             }
         }
         stage('docker build stage and docker push stage'){
             steps {
                 echo 'Authentication stage for push to GCR'
                 sh 'gcloud auth configure-docker'
-                sh 'docker build . -t gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
-                sh 'docker push gcr.io/proyekdicoding-416705/secretsanta:v$BUILD_NUMBER'
+                sh 'docker build . -t asia.gcr.io/constant-jigsaw-414207/secretsanta:v$BUILD_NUMBER'
+                sh 'docker push asia.gcr.io/constant-jigsaw-414207/secretsanta:v$BUILD_NUMBER'
             }
         }
         stage('QA Team certification') {
