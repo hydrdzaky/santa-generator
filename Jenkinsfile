@@ -68,7 +68,7 @@ pipeline {
         stage('docker build stage and docker push stage'){
             steps {
                 echo 'Authentication stage for push to GCR'
-                sh 'gcloud auth configure-docker'
+                sh 'gcloud auth configure-docker asia.gcr.io'
                 sh 'docker build . -t asia.gcr.io/constant-jigsaw-414207/secretsanta:v$BUILD_NUMBER'
                 sh 'docker push asia.gcr.io/constant-jigsaw-414207/secretsanta:v$BUILD_NUMBER'
             }
