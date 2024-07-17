@@ -82,11 +82,6 @@ pipeline {
                 sh 'docker push asia.gcr.io/constant-jigsaw-414207/secretsanta:v$BUILD_NUMBER'
             }
         }
-        stage('QA Team certification') {
-            steps{
-                input "Deploy to prod?"    
-            }
-        }
 
         stage("Build the service of cloud run using Terraform"){
             steps{
@@ -113,9 +108,9 @@ pipeline {
         }*/
     }
 
-        post {
-            always {
-                discordSend description: '', enableArtifactsList: true, footer: '', image: '', link: '', result: '', scmWebUrl: '', showChangeset: true, thumbnail: '', title: '', webhookURL: 'https://discordapp.com/api/webhooks/1221715538728849450/LH2KZSJEc1PMqwi3iqPZpvA9FsQT5-nRUBDuReyuCxGdReUmHyR_Z2mfPbCWPUqqNm2y'
-            }
+    post {
+        always {
+            discordSend description: '', enableArtifactsList: true, footer: '', image: '', link: '', result: '', scmWebUrl: '', showChangeset: true, thumbnail: '', title: '', webhookURL: 'https://discordapp.com/api/webhooks/1221715538728849450/LH2KZSJEc1PMqwi3iqPZpvA9FsQT5-nRUBDuReyuCxGdReUmHyR_Z2mfPbCWPUqqNm2y'
         }
+    }
 }
