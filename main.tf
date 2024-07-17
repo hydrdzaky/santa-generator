@@ -7,7 +7,7 @@ terraform {
   }
 }
 provider "google" {
-    project = "proyekdicoding-416705"
+    project = "constant-jigsaw-414207"
     region = "us-central1"
     credentials = var.credskey
 }
@@ -18,7 +18,7 @@ resource "google_cloud_run_v2_service" "default" {
  
   template {
     containers {
-        image = "asia.gcr.io/proyekdicoding-416705/secretsanta:${var.tags}"
+        image = "asia.gcr.io/constant-jigsaw-414207/secretsanta:${var.tags}"
     ports {
         container_port = 8080
       }
