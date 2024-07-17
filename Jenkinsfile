@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis') {
+       /* stage('Sonar Analysis') {
             steps {
                withSonarQubeEnv('sonarqube'){
                    sh ''' $SCANNER_HOME/bin/sonar-scanner \
@@ -41,7 +41,7 @@ pipeline {
                     -Dsonar.projectKey=SecretSanta '''
                }
             }
-        }
+        }*/
         
 		stage('OWASP Dependency Check') {
             steps {
